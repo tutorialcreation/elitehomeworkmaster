@@ -1,0 +1,760 @@
+{% extends 'chat/base.html' %}
+{% load static %}
+{% block content %}
+{% include 'chat/_modal.html' %}
+{% if not request.user.is_staff and not request.user.is_superuser %}
+<link href="https://fonts.googleapis.com/css2?family=Tangerine&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+{% include 'header.html' %}
+{% endif %}
+<style>
+  #chatset{
+    width: 100%;
+    height: 450px;
+    overflow-y: scroll;
+  }
+  .container{
+  max-width:500 !important;
+  margin:auto;
+  margin-top:4%;
+  font-family:sans-serif;
+  letter-spacing:0.5px;
+}
+.table{
+  width: 800px !important;
+}
+
+img{
+  max-width:100%;
+  border-radius:50%;
+}
+
+.msg-header{
+  border:1px solid #ccc;
+  width:100%;
+  height:10%;
+  border-bottom:none;
+  display:inline-block;
+  background-color:#007bff;
+}
+
+.msg-header-img{
+  border-radius:50%;
+  width:40px;
+  margin-left:5%;
+  margin-top:15px;
+  float:left;
+}
+
+.active{
+  width:120px;
+  float:left;
+  margin-top:10px;
+}
+
+.active h4{
+  font-size:20px;
+  margin-left:20px;
+  color: #fff;
+}
+
+.active h6{
+  font-size:10px;
+  margin-left:10px;
+}
+
+.header-icons{
+  width:120px;
+  float:right;
+  margin-top:12px;
+  margin-right:10px;
+}
+
+.header-icons .fa{
+  color: #fff;
+  cursor:pointer;
+  margin:10px;
+}
+
+.chat-page{
+  padding: 0 0 50px 0;
+}
+
+.msg-inbox{
+  border: 1px solid #ccc;
+  overflow:hidden;
+  padding-bottom:30px;
+}
+
+.chats{
+  padding: 30px 15px 0 25px;
+  
+}
+
+
+.msg-page{
+  height:516px;
+  overflow-y:auto;
+}
+
+.received-chats-img{
+  display:inline-block;
+  width:20px;
+  float:left;
+}
+
+.received-msg{
+  display:inline-block;
+  padding:0 0 0 10px;
+  vertical-align:top;
+  width:52%;
+}
+
+.received-msg-inbox p{
+  background: #efefef none repeat scroll 0 0;
+  border-radius:10px;
+  color: #646464;
+  font-size:14px;
+  margin:0;
+  padding: 5px 10px 5px 12px;
+  width:100%;
+}
+.time{
+  color: #777;
+  display:block;
+  font-size:12px;
+  margin:8px 0 0;
+}
+
+.outgoing-chats{
+  overflow:hidden;
+  margin: 26px 20px;
+}
+
+.outgoing-msg{
+  float:left;
+  width:52%;
+  margin-left:45%;
+}
+
+.outgoing-msg p{
+  background: #007bff none repeat scroll 0 0;
+  color: #fff;
+  border-radius:10px;
+  font-size:14px;
+  margin:auto;
+  color:#fff;
+  padding: 5px 10px 5px 12px;
+  width:100%;
+}
+
+#chat-msg{
+  list-style-type: none;
+  width: 100%;
+  overflow: hidden;
+  margin:auto;
+  padding: 0px;
+}
+.chat-items{
+  background: #efefef none repeat scroll 0 0;
+  color: #646464;
+  border-radius:10px;
+  font-size:14px;
+  margin: 17px 20px;
+  padding: 5px 10px 5px 12px;
+  width:52%;
+  float:left;
+}
+
+.chat-receiver{
+  background: #007bff none repeat scroll 0 0;
+  color: #fff;
+  border-radius:10px;
+  font-size:14px;
+  margin:17px 20px;;
+  padding: 5px 10px 5px 12px;
+  width:52%;
+  float:right;
+}
+
+#notify a{
+  display: block;
+  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+  color:  #d7d7d7; 
+  font: bold 16px Arial,Helvetica,Sans-serif;
+  text-decoration: none;
+  border-radius: 10px;
+  background-color: #444;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  -webkit-transition: all 0.3s ease 0s;
+  -moz-transition: all 0.3s ease 0s;
+  -o-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+
+#client_notify a{
+  display: block;
+  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+  color:  #d7d7d7; 
+  text-decoration: none;
+  border-radius: 10px;
+  background-color: #444;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  -webkit-transition: all 0.3s ease 0s;
+  -moz-transition: all 0.3s ease 0s;
+  -o-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+}
+.notification-msg{
+  padding-top: 10px;
+  margin-top:10px;
+  border-radius: 10px;
+  background-color:aqua;
+}
+.sent-msg{
+  background: #007bff none repeat scroll 0 0;
+  color: #fff;
+  border-radius:10px;
+  font-size:14px;
+  margin:0;
+  color:#fff;
+  padding: 5px 10px 5px 12px;
+  width:100%;
+}
+
+
+.outgoing-chats-img{
+  display:inline-block;
+  width:20px;
+  float:right;
+}
+
+.msg-bottom{
+  position:relative;
+  height:10%;
+}
+
+</style>
+<div class="container"><!--beginning of container-->
+  {% include 'messages.html' %}
+</div>
+  <div class="card"><!--beginning of general card-->
+    <!--beginning of first card header-->
+    <div class="card-header">
+      {% if internal_form %}
+      <h3>Staff Management.</h3>
+      {% else %}
+      <h3>Chat with Support</h3>
+      {% endif %}
+      <p><a href="/"><i class=" fa fa-home"></i></a></p>
+      {% if request.user.is_superuser and assignment.writer %}
+      <p><a href="{% url 'chat:threads' assignment.writer assignment.pk %}" class="btn btn-warning btn-sm">chat with writer</a></p>
+      {% elif request.user.is_staff  and not request.user.is_superuser %}
+      <p><a href="{% url 'chat:threads' assignment.support assignment.pk %}" class="btn btn-warning btn-sm">chat with support</a></p>
+      {% endif %} 
+      {% if not request.user.is_staff and not request.user.is_superuser %}
+          <div class="dropdown show float-left">
+            <a class="badge badge-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-bell"></i>
+            </a>
+          
+            <div class="dropdown-menu" id="client_notify" aria-labelledby="dropdownMenuLink">
+              <a class="dropdown-item" href="#" id="client_notification"></a>
+            </div>
+          </div>
+      {% endif %}
+    </div>
+    <!--end of first card header-->
+  
+  <!--beginning of first card body-->
+  <div class="card-body">
+    <!--beginning of first row-->
+    
+    <div class="row">
+      
+      <!--beginning of first column for either superuser or staff-->
+      <div class="col-md-6 col-lg-6">
+        
+    
+    {% if request.user.is_superuser %}
+    <a href="{%  url 'payments:issue_quote' assignment.pk %}?assignment_creator={{assignment.creator}}" class="btn btn-sm btn-info"> <i class="fa fa-eye"></i>issue quote</a>
+    <a href="{%  url 'assignments:assign_writer' assignment.pk %}?assignment_creator={{assignment.creator}}" class="btn btn-sm btn-warning"> <i class="fa"></i>assign writer</a>
+    <a href="{{assignment.document.url}}" class="btn btn-sm btn-primary pull-right" download>files</a>
+    <a href="{% url 'payments:change_quote' assignment.pk %}" class="btn btn-sm btn-danger pull-right">change quote</a>
+        <a href="{% url 'assignments:disputed' assignment.pk %}" class="btn btn-sm btn-secondary pull-right">mark disputed</a>
+        {% endif %}
+        {% if request.user.is_superuser %}
+        {% endif %}
+        <hr>
+        {% if assignment.status == 'COMP'  or assignment.status == 'APP' %}
+        <a href="{{assignment.writer_document.url}}" class="btn btn-sm btn-success pull-right" download>writers uploaded document</a>
+        {% endif %}
+        <hr>
+        
+          
+          {% if not request.user.is_staff or request.user.is_superuser %}
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" href="#order" role="tab" data-toggle="tab">Order</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#files" role="tab" data-toggle="tab">Files</a>
+            </li>
+          </ul>
+          <div id="tab-content" class="tab-content"><!--beginning of tab content-->
+          <div role="tabpanel" class="tab-pane fade show active" id="order"><!--beginning of tab panel-->
+          <table class="table">
+              
+              <tbody>
+                <tr>
+                  <td colspan="2" class="bg-secondary text-white">
+                    <p>Country</p>
+                  </td>
+                  <td colspan="2">
+                    {{assignment.location}}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" class="bg-secondary text-white">
+                      Action
+                    </td> 
+                    <td colspan="2">
+                      <div class="button-group">
+                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">return for revision</button>
+                        <a class="btn btn-success btn-sm" href="{% url 'assignments:approved' assignment.pk %}"><i class="fa fa-check">approve</i></a>
+                      </div> 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>Assignment Id</p>
+                    </td>
+                    <td colspan="2">
+                      {{assignment.id}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>Order Number</p>
+                    </td>
+                    <td colspan="2">
+                      {% for order in assignment.order_set.all %}
+                      {% if order.paid == True  and order.assignment.pk == assignment.pk and forloop.last%}
+                      <p>{{order.token}}</p>
+                      {% endif %}
+                      {% endfor %}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>Order Type</p>
+                    </td>
+                    <td colspan="2">
+                      <p>{{assignment.get_types_display}}</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>Amount</p>
+                    </td>
+                    <td colspan="2">
+                      <div>
+                        ${{assignment.price}}
+                        {% if not request.user.is_superuser %}
+                        <span class="pull-right">
+                          <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#paymentModal" data-whatever="@fat"> <i class="fa fa-money"></i> Pay</button>
+                          <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="paymentModalLabel">New message</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <input id="assignment-id"  value={{assignment.id}} hidden/>
+                                  <div id="paypal-button-container"></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          {% endif %}
+                          
+                        </span>
+                      </div>
+                      
+                    </td>
+                  </tr>
+                  
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>Payment Status</p>
+                    </td>
+                    <td colspan="2">
+                      <p class="btn btn-sm btn-success">
+                        {% for order in assignment.order_set.all %}
+                        {% if order.assignment.pk == assignment.pk  and forloop.last%}
+                        payment&rarr;paid
+                        {% endif %}
+                        {% endfor %}
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>Academic Level</p>
+                    </td>
+                    <td colspan="2">
+                      <p>{{assignment.get_level_display}}</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>Solution Format</p>
+                    </td>
+                    <td colspan="2">
+                      <p>{{assignment.solution_format}}</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>Assignment Status</p>
+                    </td>
+                    <td colspan="2">
+                      <p class="{% if assignment.status == 'PEN' %}btn btn-warning{% else %} btn btn-success{% endif %}">
+                        {{assignment.get_status_display}}
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>DeadLine</p>
+                    </td>
+                    <td colspan="2">
+                      <p>{{assignment.deadline|timesince}}</p>
+                      <p>{{assignment.deadline}}</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>Course Description</p>
+                    </td>
+                    <td colspan="2">
+                      <p>{{assignment.course_description}}</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>Writer Assigned</p>
+                    </td>
+                    <td colspan="2">
+                      <p>{{assignment.writer}}</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>More Information</p>
+                    </td>
+                    <td colspan="2">
+                      <p>{{assignment.more_info}}</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>Reason for Return</p>
+                    </td>
+                    <td colspan="2">
+                      <p>{{assignment.return_reason}}</p>
+                    </td>
+                  </tr>
+                </tbody>  
+              </table>
+          </div><!--end of tab-panel-->
+          <div role="tabpanel" class="tab-pane fade" id="files"><!--beggining of tab files-->
+            <table class="table table-hover table-responsive">
+                  <thead>
+                      <tr>
+                          <th>Id</th>
+                          <th>Name</th>
+                          <th>Assignment Type</th>
+                          <th>Time Uploaded</th>
+                          <th>Uploaded By</th>
+                          <th>Download Assignment</th>
+                          
+                      </tr>
+                  </thead>
+                  <tbody id="items">
+                      {% for assignment in individual_assignments %}
+                      <tr>
+                          <td>{{assignment.pk}}</td>
+                          <td><a href="#" >{{assignment.document}}</a></td>
+                          <td>{{assignment.get_types_display }}.</td>
+                          <td>{{assignment.uploaded_at|timesince}} ago.</td>
+                          <td>{{assignment.creator }}</td>
+                          {% if assignment.status == 'COMP'  or assignment.status == 'APP' %}
+                          <td>
+                            <a href="{{assignment.writer_document.url}}" class="btn btn-sm btn-primary" download>download assignment</a>
+                          </td>
+                          {% endif %}
+
+                      </tr>
+                      {% endfor %}
+          
+                  </tbody>
+                </table>
+              </div><!--end of tab panel-->
+            </div><!--end of tab content-->
+            {% elif request.user.is_staff and not request.user.is_superuser %}
+            <ul class="nav nav-tabs" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" href="#order" role="tab" data-toggle="tab">Order</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#files" role="tab" data-toggle="tab">Files</a>
+              </li>
+            </ul>
+            <div id="tab-content" class="tab-content"><!--beginning of tab content-->
+            <div role="tabpanel" class="tab-pane fade show active" id="order"><!--beginning of tab panel-->
+            <table class="table">
+              <!--beginning of first column for writer-->
+                <tbody>
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>Assignment Id</p>
+                    </td>
+                    <td colspan="2">
+                      {{assignment.id}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="bg-secondary text-white">
+                      <p>Order Number</p>
+                    </td>
+                    <td colspan="2">
+                      {% for order in assignment.order_set.all %}
+                      {% if forloop.last%}
+                    <p>{{order.token}}</p>
+                    {% endif %}
+                    {% endfor %}
+                  </td>
+                </tr>
+              <tr>
+                <td colspan="2" class="bg-secondary text-white">
+                  <p>Order Type</p>
+                </td>
+                <td colspan="2">
+                  <p>{{assignment.get_types_display}}</p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" class="bg-secondary text-white">
+                  <p>Amount</p>
+                </td>
+                <td colspan="2">
+                  <p>{{assignment.writers_amount}}</p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" class="bg-secondary text-white">
+                  <p>Academic Level</p>
+                </td>
+                <td colspan="2">
+                  <p>{{assignment.get_level_display}}</p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" class="bg-secondary text-white">
+                  <p>Solution Format</p>
+                </td>
+                <td colspan="2">
+                  <p>{{assignment.solution_format}}</p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" class="bg-secondary text-white">
+                  <p>Assignment Status</p>
+                </td>
+                <td colspan="2">
+                  <p class="{% if assignment.status == 'PEN' %}btn btn-warning{% else %} btn btn-success{% endif %}">
+                    {{assignment.get_status_display}}
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" class="bg-secondary text-white">
+                  <p>DeadLine</p>
+                </td>
+                <td colspan="2">
+                  {% if request.user.is_superuser %}
+                  <p>{{assignment.deadline|timesince}}</p>
+                  <p>{{assignment.deadline}}</p>
+                  {% else %}
+                  <p>{{assignment.writers_deadline|timesince}}</p>
+                  <p>{{assignment.writers_deadline}}</p>
+                  {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" class="bg-secondary text-white">
+                  <p>Course Description</p>
+                </td>
+                <td colspan="2">
+                  <p>{{assignment.course_description}}</p>
+                </td>
+              </tr>
+            </tbody>  
+        </table>
+      </div><!--end of tab panel-->
+        </div><!--end of tab content-->
+        
+        {% endif %}
+
+
+      
+    
+    
+            </div><!--end of first column for writer and super user stuff-->
+   
+    <!--beginning of chat column for all-->
+    <div class="col-md-6 col-lg-6">
+      
+      {% if request.user.is_superuser or request.user.is_staff %}
+      <h3>Chat with {% if user != object.first %}{{ object.first }}{% else %}{{ object.second }}{% endif %}</h3>
+      {% endif %}
+      <!-- Content Row -->
+      
+      
+      <!-- Content Column -->
+      <!-- Project Card Example -->
+      <!-- Color System -->
+      
+      
+      <!-- starting of card chat box -->
+      
+      <div class="card shadow mb-4" id="chatset">
+        <div class="card-header py-3"><!--starting of chat card header-->
+          <h6 class="m-0 font-weight-bold text-primary">Chat Section</h6>
+          
+        </div><!--end of chat card header-->
+        <div class="card-body"><!--starting of chat card body-->
+          <div class="text-center">
+          </div>
+                      
+                
+          {% for chat in object.chatmessage_set.all %}
+          {% if chat.user == assignment.creator or chat.user == assignment.writer %}
+            <div class="received-msg">
+              <div class="received-msg-inbox">
+                <p id="chat-itemss">{{ chat.message }}</p>
+                <span class="time">{{chat.timestamp|timesince}}</span>
+              </div>
+            </div>
+           
+          {% if chat.notification is not None %}
+          <div class="text-success text-center">
+            <ul id="notifys">&rarr;
+              {{chat.notification}}
+            </ul>
+          </div>
+          {% endif %}
+          {% else %}
+
+            
+            <div class="outgoing-msg">
+              <p id="chat-receivers">{{ chat.message }}</p>
+              <span class="time">{{chat.timestamp|timesince}}</span>
+            </div>
+            
+              {% if chat.notification is not None %}
+                <div class="text-success text-center">
+                  <ul id="notifys">&rarr;
+                    {{chat.notification}}
+                  </ul>
+                </div>
+              {% endif %}
+          {% endif %}
+          {% endfor %}
+          <ul id="chat-msg"></ul>
+          
+          
+          <form id='form' method='POST'> 
+            {% csrf_token %}
+            <input type="hidden" id="myUsername" value="{{assignment.creator.username}}"/>
+            <!-- var notification_result=$("#id_notification_result")
+            var assignment_id_result=$("#id_assignment_result")
+            var assignment_creator_result=$("#id_assignment_creator_result")
+            var assignment_writer_result=$("#id_assignment_writer_result")
+            var assignment_support_result=$("#id_assignment_support_result")
+            var payment_status_result=$("#id_payment_status_result")
+            var viewed_result=$("#id_viewed_result") -->
+            {% for chat in object.chatmessage_set.all %}
+            {% if chat.notification is not None and forloop.last %}
+              <input type="hidden" id="id_notification_result" value="{{chat.notification}}"/>
+              <input type="hidden" id="id_assignment_result" value="{{chat.assignment.id}}"/>
+              <input type="hidden" id="id_assignment_creator_result" value="{{chat.assignment.creator}}"/>
+              <input type="hidden" id="id_assignment_writer_result" value="{{chat.assignment.writer}}"/>
+              <input type="hidden" id="id_assignment_support_result" value="{{chat.assignment.support}}"/>
+              {% for order in chat.assignment.order_set.all %}
+              {% if forloop.last %}
+              <input type="hidden" id="id_payment_status_result" value="{{oder.paid}}"/>
+              {% endif %}
+              {% endfor %}
+              <input type="hidden" id="id_viewed_result" value="{{chat.viewed}}"/>
+            {% endif %}
+            {% endfor %}
+            {% if internal_form %}
+            {{form.as_p }}
+            {% else %}
+            {{chat_form.as_p }}
+            {% endif %}
+            <input type='submit' class='btn btn-primary' value='send'/>
+          </form>
+          
+          </div><!--end of chat card body-->
+      </div><!--end of chat card-->
+    </div> <!--end of chat column for all-->
+          
+            <!--beginning of modal revision instructions message -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="{% url 'assignments:return' assignment.pk%}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                          <label for="message-text" class="col-form-label">Revision instructions:</label>
+                          <textarea class="form-control" id="message-text" name='message'></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send message</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div> 
+            <!-- end of modal revision instructions message-->
+              <!--end of chat card-->
+              
+            </div><!--end of first row-->
+            
+          </div><!--end of card body for general-->
+            
+            
+          </div><!--end of card general-->
+            
+            <!-- Approach -->
+
+          </div><!--end of container-->
+          
+
+          
+{% endblock %}

@@ -1,0 +1,36 @@
+{% load static %}
+<head>
+    <!-- Required Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Page Title -->
+    <title>Elite Homework Master</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://res.cloudinary.com/actserv/image/upload/v1593525915/logo_elite_homework_master_fxokeg.jpg" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Tangerine&display=swap" rel="stylesheet">
+    <!-- CSS Files -->
+    
+    <link rel="stylesheet" href="{% static 'css/animate-3.7.0.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome-4.7.0.min.css' %}">
+    <link rel="stylesheet" href="{% static 'fonts/flat-icon/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-4.1.3.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl-carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+          $("#id_deadline").datetimepicker({
+            format: 'Y-m-d H:i',
+          });
+        });
+    </script>
+    
+</head>
+

@@ -1,0 +1,323 @@
+{% extends "chat/base.html" %}
+
+{% block content %}
+
+<!---start of container-->
+<div class="container-fluid"> 
+  {% include 'messages.html' %}
+
+  <div class="row">
+    
+    <div class="col-lg-12"><!-- beginning of second div -->
+
+    <!---start of accordion-->
+    <div id="accordion"> 
+      <!---start of first card -->
+      <div class="card">
+          <div class="card-header bg-warning text-white" id="toAccept">
+            <h3>
+              <button class="btn btn-link badge badge-light pull-left" data-toggle="collapse" data-target="#collapseToAccept" aria-expanded="true" aria-controls="collapseToAccept">
+               {% if request.user.is_superuser %}Pending Orders{% elif request.user.is_staff and not request.is_superuser %}Public Orders{% endif %}
+              <i class="fa fa-caret-down"></i>
+            </button>
+              <p class="pull-right"><i class="fa fa-bell"></i> {{ tasks.count }} task(s) </p>
+            </h3>
+          </div>
+          <!--- beginning of collapse -->
+          <div id="collapseToAccept" class="collapse show" aria-labelledby="toAccept" data-parent="#accordion">
+          <div class="card-body">
+              {% if unaccepted_orders %}
+              <table id="acceptTask" class="table table-bordered table-striped table-hover table-responsive">
+                <thead><!--head of first table-->
+                <tr class="bg-warning text-white">
+                  <th>Assignment Name</th>
+                  <th>Assignment Type</th>
+                  <th>Country</th>
+                  <th>Download Assignment</th>
+                  <th>Uploaded at</th>
+                  <th>Assignment Deadline</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+                </thead><!-- end of head of first table -->
+                <tbody><!--beginning of first table body-->
+                {% for assignment in unaccepted_orders %}
+                 
+                <tr>
+                    <td><a href="{% url 'chat:threads'  assignment.creator assignment.pk %}">{{ assignment.description }}</a></td>
+                    <td>
+                      {{assignment.get_types_display}}
+                    </td>
+                    <td>{{ assignment.get_country_display }}</td>
+                    <td><a href="{{assignment.document.url}}" class="btn btn-sm btn-primary" download>download assignment</a></td>
+                    <td>
+                      {{assignment.uploaded_at|timesince}} ago
+                    </td>
+                    <td class="{% if task.is_overdated %}bg-danger text-white{% endif %}">
+                      {{assignment.deadline}}
+                    </td>
+                    <td>
+                     {{assignment.get_status_display}}
+                      </td>
+                     <td><div class="btn-group">
+                       {% if request.user.is_superuser %}
+                        
+                        {% if assignment.status == 'PRIV' %}
+                        <a href="{% url 'assignments:make_public' assignment.pk %}" class="btn btn-sm btn-warning"> <i class="fa fa-eye"></i> make public</a>
+                        {% endif %}
+                       {% elif request.user.is_staff and not request.user.is_superuser %}
+                        <a href="{% url 'assignments:bid'  assignment.pk %}" class="btn btn-warning">accept</a>
+                      {% endif %}
+                    </div></td>
+                  </tr>
+                  {% endfor %}
+                </tbody><!-- end of first table body-->
+              </table>
+            {% endif %}
+      
+          </div>
+        </div><!-- end of first collapse -->
+      </div>
+      <!--end of first card -->
+      <!--- beginning of second card -->
+      <div class="card">
+          <div class="card-header bg-warning text-white" id="ongoingTasks">
+            <h3>
+              <button class="btn btn-link badge badge-light pull-left collapsed" data-toggle="collapse" data-target="#collapseOngoingTasks" aria-expanded="false" aria-controls="collapseOngoingTasks">
+                Ongoing Orders
+              <i class="fa fa-caret-down"></i>
+              </button>
+              <p class="pull-right"><i class="fa fa-bell"></i> {{ tasks_inprogress.count }} task(s) </p>
+            </h3>
+          </div>
+          <div id="collapseOngoingTasks" class="collapse" aria-labelledby="ongoingTasks" data-parent="#accordion"><!--- beginning of second collapse -->
+          <div class="card-body">
+            {% if request.user %}
+            <table id="ongoingTask" class="table table-bordered table-striped table-hover table-responsive">
+              <thead><!-- beginning of second table head -->
+              <tr class="bg-warning text-white">
+                <th>Assignment Name</th>
+                <th>Assignment Type</th>
+                <th>Country</th>
+                <th>Download Assignment</th>
+                <th>Uploaded at</th>
+                <th>Assignment Deadline</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+              </thead><!-- end of second table head -->
+              <tbody><!--beginning of second table body -->
+                {% for assignment in pending_orders %}
+                 
+                <tr>
+                    <td><a href="{% url 'chat:threads'  assignment.creator assignment.pk %}">{{ assignment.description }}</a></td>
+                    <td>
+                      {{assignment.get_types_display}}
+                    </td>
+                    <td>{{ assignment.get_country_display }}</td>
+                    <td><a href="{{assignment.document.url}}" class="btn btn-sm btn-primary" download>download assignment</a></td>
+                    <td>
+                      {{assignment.uploaded_at|timesince}} ago
+                    </td>
+                    <td class="{% if task.is_overdated %}bg-danger text-white{% endif %}">
+                      {% if request.user.is_superuser %}
+                      {{assignment.deadline|timesince}}
+                      {{assignment.deadline}}
+                      {% else %}
+                      {{assignment.writers_deadline|timesince}}
+                      {{assignment.writers_deadline}}
+                      {% endif %}
+                    </td>
+                    <td>
+                      {{assignment.get_status_display}}
+                     </td>
+                     <td><div class="btn-group">
+                       {% if request.user.is_superuser %}
+                       
+
+                       {% elif request.user.is_staff and not request.user.is_superuser %}
+                       <a href="{% url 'assignments:upload_assignment' assignment.pk %}" class="btn btn-sm btn-warning"> <i class="fa fa-eye"></i>upload assignment</a>
+                       <!-- <button data-id="{% url 'assignments:upload_assignment' assignment.pk %}" class="upload_assignment btn btn-sm btn-warning"><i class="fa fa-edit">upload assignment</i></button> -->
+                        <a href="{% url 'assignments:completed'  assignment.pk %}" class="btn btn-success">complete</a>
+                      {% endif %}
+                    </div></td>
+                  </tr>
+                  {% endfor %}
+              </tbody><!-- end of second table body -->
+            </table>
+          {% endif %}      
+          </div>
+          </div><!-- end of second collapse -->
+      </div>
+      <!--end of second card-->
+
+      <!--- beginning of third card -->
+      <div class="card">
+        <div class="card-header bg-warning text-white" id="completedTasks">
+          <h3>
+            <button class="btn btn-link badge badge-light pull-left collapsed" data-toggle="collapse" data-target="#collapseCompletedTasks" aria-expanded="false" aria-controls="collapseCompletedTasks">
+              Completed Orders
+            <i class="fa fa-caret-down"></i>
+            </button>
+            <p class="pull-right"><i class="fa fa-bell"></i> {{ approved_tasks.count }} task(s) </p>
+          </h3>      
+        </div>
+        <div id="collapseCompletedTasks" class="collapse" aria-labelledby="completedTasks" data-parent="#accordion"><!--- beginning of third collapse -->
+        <div class="card-body">
+          {% if completed_orders%}
+          <table id="completeTask" class="table table-bordered table-striped table-hover table-responsive">
+            <thead><!-- beginning of third table head -->
+            <tr class="bg-warning text-white">
+              <th>Assignment Name</th>
+              <th>Assignment Type</th>
+              <th>Country</th>
+              <th>Download Assignment</th>
+              <th>Uploaded at</th>
+              <th>Assignment Deadline</th>
+              <th>Status</th>
+            </tr>
+            </thead><!-- beginning of third table head -->
+            <tbody><!-- beginning of third table body -->
+              {% for assignment in completed_orders %}
+              <tr>
+                <td><a href="{% url 'chat:threads'  assignment.creator assignment.pk %}">{{ assignment.description }}</a></td>
+                <td>
+                  {{assignment.get_types_display}}
+                </td>
+                <td>{{ assignment.get_country_display }}</td>
+                <td><a href="{{assignment.document.url}}" class="btn btn-sm btn-primary" download>download assignment</a></td>
+                <td>
+                  {{assignment.uploaded_at|timesince}} ago
+                </td>
+                <td class="{% if task.is_overdated %}bg-danger text-white{% endif %}">
+                  {{assignment.deadline}}
+                </td>
+                <td>
+                  {{assignment.get_status_display}}
+                 </td>
+              </tr>
+              {% endfor %}
+            </tbody><!-- end of third table body -->
+          </table>
+        {% endif %}    
+        </div>
+        </div><!-- end of third collapse -->
+      </div>
+      <!-- end of third card -->
+      {% if request.user.is_superuser %}
+      <!--- beginning of fourth card -->
+      <div class="card">
+        <div class="card-header bg-warning text-white" id="toReview">
+          <h3>
+            <button class="btn btn-link badge badge-light pull-left collapsed" data-toggle="collapse" data-target="#collapseToReview" aria-expanded="false" aria-controls="collapseToReview">
+              All Orders
+            <i class="fa fa-caret-down"></i>
+            </button>
+            <p class="pull-right"><i class="fa fa-bell"></i> {{ completed_tasks }} task(s) </p>
+          </h3>      
+        </div>
+        <div id="collapseToReview" class="collapse" aria-labelledby="toReview" data-parent="#accordion"><!--- beginning of fourth collapse --> 
+        <div class="card-body">
+          <p>
+            You have approved {{ tasks.count }} task(s) and {{tasks.count}} task(s) are waiting to be reviewed for returning for revision 
+            and {{tasks.count}} task(s) are waiting to be reviewed for reassignment.
+          </p>
+          {% if assignments %}
+          <table id="taskReview" class="table table-bordered table-striped table-hover table-res">
+            <thead><!--beginning of fourth table head-->
+            <tr class="bg-warning text-white">
+              <th>Assignment Name</th>
+              <th>Assignment Type</th>
+              <th>Country</th>
+              <th>Download Assignment</th>
+              <th>Uploaded at</th>
+              <th>Assignment Deadline</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+            </thead><!--end of fourth table head-->
+            <tbody><!-- beginning of fourth table body-->
+            {% for assignment in assignments %}
+            <tr>
+                <td><a href="{% url 'chat:threads'  assignment.creator assignment.pk %}">{{ assignment.description }}</a></td>
+                <td>
+                  {{assignment.get_types_display}}
+                </td>
+                <td>{{ assignment.get_country_display }}</td>
+                <td><a href="{{assignment.document.url}}" class="btn btn-sm btn-primary" download>download assignment</a></td>
+                <td>
+                  {{assignment.uploaded_at|timesince}} ago
+                </td>
+                <td class="{% if task.is_overdated %}bg-danger text-white{% endif %}">
+                  {{assignment.deadline}}
+                </td>
+                <td>
+                  {{assignment.get_status_display}}
+                 </td>
+                 <td><div class="btn-group">
+                   {% if request.user.is_superuser  and not assignment.status == 'APP' %}
+                   <button data-id="{%  url 'assignments:assign_writer' assignment.pk %}" class="assign_writer btn btn-sm btn-warning"><i class="fa fa-cash">re-assign writer</i></button>
+                   {% else %}
+                    Well Done
+                   {% endif %}
+                </div></td>
+              </tr>
+              {% endfor %}
+            </tbody><!-- end of fourth table body-->
+          </table>
+        {% endif %}    
+        </div>
+        </div><!--- end of fourth collapse -->
+      </div>
+      <!--- end of fourth card -->
+      {% endif %}
+      
+
+    </div><!--- end of accordion-->
+
+    </div><!--end of second div-->
+  </div>
+
+
+  </div><!-- end of container -->
+  <script>
+  
+    $(function () {
+        $("#id_deadline").datetimepicker({
+          format: 'd-m-Y H:i',
+        });
+      });
+
+  </script>
+  
+{% endblock %}
+<script>
+  
+  $(function () {
+      $("#id_deadline").datetimepicker({
+        format: 'd-m-Y H:i',
+      });
+    });
+
+  $(function () {
+      
+      // Update level buttons
+      $(".update_form").each(function () {
+        $(this).modalForm({formURL:$(this).data('id')});
+      });
+      $(".reassign").each(function () {
+        $(this).modalForm({formURL:$(this).data('id')});
+      });
+      $(".upload_assignment").each(function () {
+        $(this).modalForm({formURL:$(this).data('id')});
+      });
+  });
+
+  $(function () {
+      
+      // Update level buttons
+      $(".rating").each(function () {
+        $(this).modalForm({formURL:$(this).data('id')});
+      });
+  });
+</script>

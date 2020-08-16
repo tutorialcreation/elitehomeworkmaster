@@ -1,0 +1,46 @@
+.navbar-brand {
+    width:150px !important;
+    font-size: 24px !important;
+    font-family: 'Tangerine', cursive;
+}
+.navbar-brand img {
+    height: 50px !important;
+    /* put value of image height as your need */
+    float: left !important;
+    margin-right: 7px !important;
+}
+.navbar-custom {
+    background-color: #ffc72e;
+ }
+
+ /* change the brand and text color */
+ .navbar-custom .navbar-brand,
+ .navbar-custom .navbar-text {
+     color: rgba(19, 18, 18, 0.8);
+ }
+
+ /* change the link color */
+ .navbar-custom .navbar-nav .nav-link {
+     color: rgba(15, 15, 15, 0.5);
+ }
+
+ /* change the color of active or hovered links */
+ .navbar-custom .nav-item.active .nav-link,
+ .navbar-custom .nav-item:hover .nav-link {
+     color: #1a1919;
+ }
+
+ /* for dropdown only - change the color of droodown */
+ .navbar-custom .dropdown-menu {
+     background-color: #ffffff;
+ }
+ .navbar-custom .dropdown-item {
+     color: #161616;
+ }
+ .navbar-custom .dropdown-item:hover,
+ .navbar-custom .dropdown-item:focus {
+     color: #333333;
+     background-color: rgba(22, 21, 21, 0.5);
+ }
+
+ 

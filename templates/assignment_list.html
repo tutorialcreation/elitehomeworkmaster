@@ -1,0 +1,136 @@
+{% load crispy_forms_tags %}
+{% block content %}
+{% include 'links.html' %}
+{% include 'header.html' %}
+{% include 'messages.html' %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+<script src="https://js.stripe.com/v3/"></script>
+<style type="text/css">
+
+</style>
+<hr>
+<div class="content my-5">
+    <hr>
+    <div class="container-fluid p-7 bootstrap snippet">
+        <div class="row">
+            <div class="col-12">
+                <h3>{{request.user.first_name}}</h3></div>
+                  
+            
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h2> Assignments Set</h2>
+            </div>
+            <div class="card-body">
+                
+                <div class="row">
+                    <div class="col-12">
+                        
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="nav-item"><a href="#messages" class="nav-link" data-toggle="tab">Files</a></li>
+                    <li class="nav-item"><a href="#settings" class="nav-link" data-toggle="tab">Sections</a></li>
+                </ul>
+    
+                <div class="tab-content">
+                    
+                    <!--/tab-pane-->
+                    
+                    <!-- tab-pane -->
+                    <div class="tab-pane active" id="messages">
+                        <div class="table-responsive">
+                            
+                            <table class="table table-hover table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Name</th>
+                                        <th>Assignment Type</th>
+                                        <th>Time Uploaded</th>
+                                        <th>Uploaded By</th>
+                                        <th>Download Assignment</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody id="items">
+                                    {% for assignment in individual_assignments %}
+                                    <tr>
+                                        <td>{{assignment.pk}}</td>
+                                        <td><a href="{% url 'chat:threads' assignment.support.username assignment.pk %}" >{{assignment.document}}</a></td>
+                                        <td>{{assignment.get_types_display }}.</td>
+                                        <td>{{assignment.uploaded_at|timesince}} ago.</td>
+                                        <td>{{assignment.creator }}</td>
+                                        {% if assignment.status == 'COMP'  or assignment.status == 'APP' %}
+                                        <td>
+                                          <a href="{{assignment.writer_document.url}}" class="btn btn-sm btn-primary" download>download assignment</a>
+                                        </td>
+                                        {% endif %}
+
+                                    </tr>
+                                    {% endfor %}
+                         
+                                </tbody>
+                            </table>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-4 col-md-offset-4 text-center">
+                                    <ul class="pagination" id="myPager"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/table-resp-->
+    
+                        <hr>
+    
+                    </div>
+    
+                
+                </div>
+                <!--/tab-pane-->
+            </div>
+            <hr>
+            
+        <!--/col-9-->
+    
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form>
+                    <div class="form-group">
+                      <label for="recipient-name" class="col-form-label">Recipient:</label>
+                      <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="form-group">
+                      <label for="message-text" class="col-form-label">Message:</label>
+                      <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Send message</button>
+                </div>
+              </div>
+            </div>
+          </div>
+         
+          </div>
+          
+          
+    </div>
+</div>
+
+<!--/row-->
+  {% include 'scripts.html' %}
+
+
+{% endblock %}

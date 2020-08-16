@@ -1,0 +1,59 @@
+{% load static %}
+<nav class="navbar navbar-expand-sm  navbar-custom" style="color: black;">
+    <img class="navbar-brand" src="https://res.cloudinary.com/actserv/image/upload/v1593525915/logo_elite_homework_master_fxokeg.jpg"> 
+    <a class="" href="/" style="font-size: 45px; font-family: 'Tangerine', cursive; color: black;"><strong> Elite HomeworkMaster</strong></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCustom">
+        <i class="fa fa-bars fa-lg py-1 text-white"></i>
+    </button>
+    <div class="navbar-collapse collapse" id="navbarCustom" style="color: black;">
+        <ul class="navbar-nav ml-4">
+            <li class="nav-item"><a href="/" class="nav-link text-dark"> <strong> Home </strong></a></li>
+            <li class="nav-item"><a href="{% url 'about' %}" class="nav-link text-dark"> <strong> About us </strong></a></li>
+            <li class="nav-item"><a href="{% url 'chat:review' %}" class="nav-link text-dark"> <strong> Reviews </strong></a></li>
+            
+            <li class="nav-item"><a href="{% url 'workflow' %}" class="nav-link text-dark"> <strong> How it works</strong> </a>
+            </li>
+            <li class="nav-item"><a href="{% url 'policy' %}" class="nav-link text-dark"> <strong> Policy </strong> </a>
+            </li>
+            {% if request.user.is_authenticated and not request.user.is_staff or request.user.is_superuser %}
+            <li class="nav-item"><a href="{% url 'assignments:assignment_list' %}?username=support" class="nav-link text-dark"> <strong> Assignments </strong></a>
+            </li>
+            {% endif %}
+            <li class="nav-item"><a href="{% url 'assignments:upload' %}" class="nav-link text-dark"> <strong> Order now </strong></a></li>
+            <li class="nav-item"><a href="{% url 'contacts' %}" class="nav-link text-dark"> <strong> Contact us </strong></a></li>
+            
+        </ul>
+        <ul class="navbar-nav ml-5">
+            {% if request.user.is_authenticated%}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-user"></i>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="{% url 'authentication:profile' %}">Profile</a>
+                  <a class="dropdown-item" href="/accounts/logout">Logout</a>
+                  
+                </div>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a href="{% url 'authentication:login' %}" class="btn btn-sm btn-info"><i class="fa fa-user"></i>Login/Join</a>
+            </li>
+            {% endif %}
+            <li class="nav-item dropdown">
+                {% if request.user.is_superuser %}
+                <a class="nav-link dropdown-toggle" href="{% url 'chat:index' %}" id="navbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-user">Admin Dashboard</i>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'authentication:profile' %}">View My Profile</a>
+                    <a class="dropdown-item" href="/accounts/logout">Logout</a>
+                </div>
+                {% endif %}
+            </li>
+
+        </ul>
+            
+    </div>
+</nav>
+

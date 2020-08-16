@@ -1,0 +1,62 @@
+{% load crispy_forms_tags %}
+{% include 'links.html' %}
+{% include 'header.html' %}
+
+<hr>
+<div class="container">
+    <!--cards start-->
+    {% include 'messages.html' %}
+    <div class="bg-white rounded shadow-sm p-4 mb-4 restaurant-detailed-ratings-and-reviews">    
+        <a href="#" class="btn btn-outline-primary btn-sm float-right">Top Rated</a>
+        <h5 class="mb-1">All Ratings and Reviews</h5>
+        {% for review in reviews %}
+        <!--reviews start-->
+        <div class="reviews-members pt-4 pb-4">
+            <!--media start-->
+            <div class="media">
+                <a href="#"><i class="fa fa-user"></i></a>
+                <hr>
+                <!--media body-->
+                <div class="media-body">
+                    <!--reviews header -->
+                    <div class="reviews-members-header">
+                        <span class="star-rating float-right">
+                              <a href="#"><i class="icofont-ui-rating active"></i></a>
+                              <a href="#"><i class="icofont-ui-rating active"></i></a>
+                              <a href="#"><i class="icofont-ui-rating active"></i></a>
+                              <a href="#"><i class="icofont-ui-rating active"></i></a>
+                              <a href="#"><i class="icofont-ui-rating"></i></a>
+                              </span>
+                        <h6 class="mb-1"><a class="text-black" href="#">{{review.user}}</a></h6>
+                        <p class="text-gray">{{review.created_at}}</p>
+                    </div>
+                    <!--end reviews header-->
+                    <!--reviews body-->
+                    <div class="reviews-members-body">
+                        <p>{{review.review_message}}</p>
+                    </div>
+                    <!--end reviews body-->
+                </div>
+                <!--end media body-->
+            </div>
+            <!--end media -->
+        </div>
+        <!--end reviews -->
+        {% endfor %}
+    </div>
+    <!--end card-->
+    <div class="card">
+        <div class="card-header">
+            Reviews
+        </div>
+        <div class="card-body">
+            {% if request.user.is_authenticated %}
+            <form action="" method="post"> 
+                {% csrf_token %}
+                {{form|crispy}}
+                <input type="submit" value="submit" class="btn btn-warning btn-sm">
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>

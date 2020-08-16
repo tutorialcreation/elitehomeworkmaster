@@ -1,0 +1,39 @@
+{% extends 'writers_index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<hr>
+
+<div class="container my-5">
+    <div class="card-header bg-warning">
+        Upload Personal Files
+    </div>
+    <div class="card-body">
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form|crispy}}
+            <button type="submit" class="btn btn-sm btn-warning">Upload</button>
+        </form>
+        <hr>
+          <table class="table">
+            <thead class="thead-light bg-warning">
+              <tr>
+                <th scope="col">Document Name</th>
+                <th scope="col">Document</th>
+                <th scope="col">User</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for document in data %}  
+              <tr>
+                <td>{{document.description}}</td>
+                <td>{{document.document.url}}</td>
+                <td>{{request.user}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+    </div>
+</div>
+
+{% endblock%}

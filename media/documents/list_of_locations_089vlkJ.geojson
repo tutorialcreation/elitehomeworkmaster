@@ -1,0 +1,133 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Naivas Supermarket",
+        "hours": "6am - 5pm",
+        "phone": "020789747",
+        "description": "Nairobi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.283148,
+          36.819868
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tuskys Supermarket",
+        "hours": "9am - 4pm",
+        "phone": "0202210347",
+        "description": "Nairobi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.259836,
+          36.777153
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Royal Snacks Ltd",
+        "hours": "10am - 8pm",
+        "phone": "0733708697",
+        "description": "Nairobi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2880317,
+          36.8286227
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Chandarana Foodplus Supermarkets (ABC Place Branch)",
+        "hours": "8am - 5:30pm",
+        "phone": "0720 626736",
+        "description": "Nairobi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2932792,
+          36.7877419
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Location 4",
+        "hours": "8am - 5:30pm",
+        "phone": "(555) 555-1989",
+        "description": "Location #4 description"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2647819,
+          36.8026876
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "EastMatt Mfangano Supermarket",
+        "hours": "8am - 5:30pm",
+        "phone": "020 2210001",
+        "description": "Nairobi
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2022344,
+          36.8329887
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Chandarana Foodplus Supermarket (Yaya)",
+        "hours": "8am - 5:30pm",
+        "phone": "0720 600333",
+        "description": "Nairobi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.3233376,
+          36.8663544
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Quickmart",
+        "hours": "9:30am - 6pm",
+        "phone": "0708 600500",
+        "description": "Nairobi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.3123019,
+          36.8167238
+        ]
+      }
+    }
+  ]
+}

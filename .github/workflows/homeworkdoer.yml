@@ -1,0 +1,86 @@
+name: Elite Homework Master System CI and CD
+
+on:
+    push:
+        branches: [ master ]
+    pull_request:
+        branches:
+            - '*'
+
+jobs:
+    build:
+        name: Elite HomeworkMaster Continuous Integration
+        runs-on: ubuntu-latest
+
+        services:
+            postgres:
+                image: postgres:11.0
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: homework_master
+                ports:
+                    - 5432:5432
+                options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Python 3.6
+              uses: actions/setup-python@v2
+              with:
+                python-version: 3.6
+            - name: psycopg2 dependencies
+              run: sudo apt-get install python-dev libpq-dev
+            - name: Install pipenv
+              run: pip install pipenv
+            - name: Install dependencies
+              run: pipenv install
+
+            - name: Test with coverage
+              env:
+                DB_USER: postgres
+                DB_HOST: localhost
+                DB_PASSWORD: postgres
+                DB_NAME: homework_master
+
+              run: |
+                pipenv run coverage run --source=assignments  manage.py test --verbosity=2
+                pipenv run coverage report -m 
+
+    
+    build-and-deploy:
+        name: Elite Homework Master Continuous Deployment
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Executing Elite HomeworkMaster Continuous Deployment
+            #   uses: appleboy/ssh-action@master
+              with:
+                script: |
+                    git add .
+                    git commit --amend --no-edit
+                    git push heroku +master
+
+              
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+
+
+            
+        

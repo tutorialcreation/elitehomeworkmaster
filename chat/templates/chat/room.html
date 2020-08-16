@@ -1,0 +1,230 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,300' rel='stylesheet' type='text/css'>
+    <script src="https://use.typekit.net/hoy3lrg.js"></script>
+    <script>try{Typekit.load({ async: true });}catch(e){}</script>
+  </head>
+
+<body>
+  <div class="container">
+  <div class="row">
+    {% if request.user.is_superuser %}
+    <div class="col-6">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Issue Quote</button>
+      <hr>
+      <div class="row">
+        <div class="col-md-6 col-lg-6 bg-secondary text-white">
+
+            <p>Action</p>
+            <p>Order Number</p>
+            <p>Order Type</p>
+            <p>Amount</p>
+            <p>Payment Status</p>
+            <p>Academic Level</p>
+            <p>Solution Format</p>
+            <p>Request Type</p>
+            <p>DeadLine</p>
+            <p>Course Description</p>
+            <p>More Information</p>
+        </div>
+        <div class="col-md-6 col-lg-6">
+            {% for assignment in filter.qs %}
+            {% if forloop.first %}
+            <div class="button-group">
+                <button class="btn btn-primary btn-sm"><i class="fa fa-upload">upload</i></button>
+                <button class="btn btn-danger btn-sm"><i class="fa fa-close">cancel order</i></button>
+                <button class="btn btn-success btn-sm"><i class="fa fa-list">order section</i></button>
+            </div>
+            {% for order in assignment.allowed_memberships.all %}
+            <p>{{order.stripe_plan_id}}</p>
+            <p>{{order.get_membership_type_display}}</p>
+            <p>${{order.price}}</p>
+            {% if order.payment_status %}
+            <div class="alert alert-success" role="alert">
+                Payment completed
+            </div>
+            {% else %}
+            <div class="alert alert-warning" role="alert">
+                Pending Quote
+            </div>
+            {% endif %}
+            {% endfor %}
+            <p>{{assignment.get_level_display}}</p>
+            <p>{{assignment.solution_format}}</p>
+            <p>{{assignment.get_types_display}}</p>
+            <p>{{assignment.deadline}}</p>
+            <p>{{assignment.course_description}}</p>
+            <p>{{assignment.more_info}}</p>
+            {% endif  %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    </div>
+    <div class="{% if request.user.is_superuser %}col-6{% else %}col-12{% endif %}">
+      <div id="frame">
+        <div class="card">
+          <div class="card-header bg-success">
+            <nav class="navbar navbar-icon-top navbar-expand-lg navbar-dark bg-dark">
+              <a class="navbar-brand" href="#">Chats</a>
+              
+            
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-bell">
+                        <span class="badge badge-primary"></span>
+                      </i>
+                    </a>
+                    {% if notifications.count > 0 %}
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      {% for n in notifications %}
+                      <a class="dropdown-item" href="/authentication/notification/{{n.id}}/">{{n.title}}</a>
+                      {% endfor %}
+                    </div>
+                    {% endif %}
+                  </li>
+                </ul>
+                
+              </div>
+            </nav>
+            
+            <p>{{ username }}</p>
+          </div>
+          <div class="card-body">
+            <form action="" method="post" id="form">
+              {% csrf_token %}
+              {{form}}
+              <input type="submit" value="send" clas="btn btn-primary btn-sm">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="" method="GET">
+            <div class="form-group">
+              <label for="recipient-name" class="col-form-label">Issue Quote Price:</label>
+              <input type="text" class="form-control" id="quote">
+            </div>
+            <button type="submit" class="btn btn-primary">Issue Quote</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+{% include 'chat/js.html' %}
+<script src="{% static 'reconnecting-websocket.js' %}"></script>
+<script>
+
+    // var loc = window.location;
+    // var wsStart = 'ws://';
+    // if(loc.protocol == 'https:'){
+    //   wsStart='wss://'
+    // }
+    // var endpoint =wsStart+loc.host + loc.pathname;
+    // var socket = new ReconnectingWebSocket(endpoint);
+    
+    // socket.onopen=function(e){
+    //       console.log('open',e)
+    // }
+    // socket.onmessage=function(e){
+    //       console.log('message',e)
+    // }
+
+    // socket.onclose=function(e){
+    //       console.log('close',e)
+    // }
+
+    // socket.onerror=function(e){
+    //       console.log('error',e)
+    // }
+
+    // var roomName = 'support';
+    // var username = 'luther';
+
+    // var chatSocket = new ReconnectingWebSocket(
+    //     'ws://' + window.location.host +
+    //     '/ws/chat/' + roomName + '/');
+
+    // chatSocket.onopen = function(e) {
+    //   fetchMessages();
+    // }
+
+    // chatSocket.onmessage = function(e) {
+    //     var data = JSON.parse(e.data);
+    //     console.log(data);
+    //     if (data['command'] === 'messages') {
+    //       for (let i=0; i<data['messages'].length; i++) {
+    //         createMessage(data['messages'][i]);
+    //       }
+    //     } else if (data['command'] === 'new_message'){
+    //       createMessage(data['message']);
+    //     }
+    // };
+
+    // chatSocket.onclose = function(e) {
+    //     console.error('Chat socket closed unexpectedly');
+    // };
+
+    // document.querySelector('#chat-message-input').onkeyup = function(e) {
+    //     if (e.keyCode === 13) {  // enter, return
+    //         document.querySelector('#chat-message-submit').click();
+    //     }
+    // };
+
+    // document.querySelector('#chat-message-submit').onclick = function(e) {
+    //     var messageInputDom = document.getElementById('chat-message-input');
+    //     var message = messageInputDom.value;
+    //     chatSocket.send(JSON.stringify({
+    //         'command': 'new_message',
+    //         'message': message,
+    //         'from': username
+    //     }));
+
+    //     messageInputDom.value = '';
+    // };
+
+    // function fetchMessages() {
+    //   chatSocket.send(JSON.stringify({'command': 'fetch_messages' }));
+    // }
+
+    // function createMessage(data) {
+    //   var author = data['author'];
+    //   var msgListTag = document.createElement('li');
+    //   var imgTag = document.createElement('img');
+    //   var pTag = document.createElement('p');
+    //   pTag.textContent = data.content;
+      
+    //   if (author === username) {
+    //     msgListTag.className = 'sent';
+    //   } else {
+    //     msgListTag.className = 'replies';
+    //   }
+    //   msgListTag.appendChild(imgTag);
+    //   msgListTag.appendChild(pTag);
+    //   document.querySelector('#chat-log').appendChild(msgListTag);
+    // }
+
+</script>
+</body>
+
+</html>
